@@ -1,0 +1,43 @@
+name: Node.js CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    env:
+      REST_BASE_URL: ${{ vars.REST_BASE_URL }}
+      GRAPHQL_BASE_URL: ${{ vars.GRAPHQL_BASE_URL }}
+
+    steps:
+    - name: FAZER O CHECKOUT DO CÓDIGO
+      uses: actions/checkout@v4
+
+    - name: DEFINIR A VERSÃO DO NODE.JS
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: INSTALAR DEPENDÊNCIAS
+      run: npm install
+
+    - name: EXECUTAR OS TESTES UNITÁRIOS DO CONTROLLER
+      run: npm run test:controller-rest
+
+    - name: INICIAR A API
+      run: npm start &
+
+    - name: AGUARDAR INICIALIZAÇÃO DA API
+      run: sleep 10
+
+    - name: EXECUTAR OS TESTES E2E DA API REST
+      run: npm run test:external-rest
+
+    - name: EXECUTAR OS TESTES E2E DA API GRAPHQL
+      run: npm run test:external-graphql

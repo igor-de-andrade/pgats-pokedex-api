@@ -1,0 +1,142 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pokédex API",
+    "version": "1.0.0",
+    "description": "API Rest para gerenciamento da pokédex de aventureiros."
+  },
+  "tags": [
+    { "name": "Users", "description": "Operações de usuário" },
+    { "name": "Pokédex", "description": "Operações da pokédex" }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Registrar novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário registrado" },
+          "409": { "description": "Usuário já existe" }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login de usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login bem-sucedido" },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Listar usuários",
+        "responses": {
+          "200": { "description": "Lista de usuários" }
+        }
+      }
+    },
+    "/pokedex/register": {
+      "post": {
+        "tags": ["Pokédex"],
+        "summary": "Registrar pokémon na pokédex do usuário",
+        "security": [{ "ApiKeyAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pokemonId": { "type": "integer" }
+                },
+                "required": ["pokemonId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Pokémon registrado" },
+          "400": { "description": "Erro de validação" }
+        }
+      }
+    },
+    "/pokedex": {
+      "get": {
+        "tags": ["Pokédex"],
+        "summary": "Listar pokémons registrados na pokédex do usuário",
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de pokémons" }
+        }
+      }
+    },
+    "/pokedex/remove": {
+      "delete": {
+        "tags": ["Pokédex"],
+        "summary": "Remover pokémon da pokédex do usuário",
+        "security": [{ "ApiKeyAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pokemonId": { "type": "integer" }
+                },
+                "required": ["pokemonId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Pokémon removido" },
+          "400": { "description": "Erro de validação" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  }
+}

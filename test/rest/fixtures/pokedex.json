@@ -1,0 +1,10 @@
+{
+    "user": {
+        "username": "ash",
+        "password": "123456"
+    },
+
+    "pokemon": {
+        "pokemonId": 25
+    }
+}
